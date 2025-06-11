@@ -113,7 +113,7 @@ void render(const char *buf, size_t bufi)
 	fprintf(stderr, "\r: %s\n", buf);
 	for (size_t i = 0; i < 5; ++i)
 		fprintf(stderr, "`%s'\n", results[i].name);
-	fprintf(stderr, "\033[6A\033[%dC", 2 + bufi);
+	fprintf(stderr, "\033[6A\033[%luC", 2 + bufi);
 	fflush(stderr);
 }
 
@@ -156,10 +156,10 @@ int main(int argc, char **argv)
 		} break;
 		}
 		render(buf, bufi);
-cont:
+cont:;
 	}
 end:
-	fprintf(stderr, "\033[6B\rYou've chosen `", results[0].name);
+	fprintf(stderr, "\033[6B\rYou've chosen `");
 	fflush(stderr);
 	fprintf(stdout, "%s", results[0].name);
 	fflush(stdout);
