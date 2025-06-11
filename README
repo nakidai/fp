@@ -1,0 +1,15 @@
+FP(1)			    General Commands Manual			 FP(1)
+
+NAME
+     fp - interactive file picker
+
+SYNOPSIS
+     fp path
+
+DESCRIPTION
+     fp searches for files from path.  User can type something and this will
+     be visible on the screen.	fp prints all the interactive stuff into
+     stderr and the result into stdout, so this means you can easily pipe this
+     program into another one.
+
+Linux 6.14.7-arch2-1		 June 11, 2025		  Linux 6.14.7-arch2-1
