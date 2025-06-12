@@ -21,6 +21,7 @@ struct result
 	char name[NAME_MAX+1];
 } *results = 0;
 size_t amount = 0;
+int ischosen = 1;
 struct termios state;
 
 int getch()
@@ -43,11 +44,21 @@ int getch()
 
 void restore(void)
 {
+	fprintf(stderr, "\033[6B\r");
+	if (ischosen)
+	{
+		fprintf(stderr, "You've chosen `");
+		fflush(stderr);
+		fprintf(stdout, "%s", results[0].name);
+		fflush(stdout);
+		fprintf(stderr, "'!\n");
+	}
 	tcsetattr(0, TCSANOW, &state);
 }
 
 void getchhnd(int sig)
 {
+	ischosen = 0;
 	exit(1);
 }
 
@@ -141,27 +152,20 @@ int main(int argc, char **argv)
 		switch (ch)
 		{
 		case -1: case 4: case '\n': case '\r':
-			goto end;
+			return 0;
 		case 127:
 		{
 			if (!bufi)
-				goto cont;
+				continue;
 			buf[--bufi] = 0;
 		} break;
 		default:
 		{
 			if (bufi == NAME_MAX)
-				goto cont;
+				continue;
 			buf[bufi++] = ch;
 		} break;
 		}
 		render(buf, bufi);
-cont:;
 	}
-end:
-	fprintf(stderr, "\033[6B\rYou've chosen `");
-	fflush(stderr);
-	fprintf(stdout, "%s", results[0].name);
-	fflush(stdout);
-	fprintf(stderr, "'!\n");
 }
