@@ -109,7 +109,7 @@ void loadpath(const char *path)
 	errno = 0;
 	DIR *dir = opendir(path);
 	if (!dir)
-		err(1, "opendir(`%s')", path);
+		return;
 	for (struct dirent *d; (d = readdir(dir));)
 	{
 		if (find(d->d_name))
@@ -151,6 +151,8 @@ int main(int argc, char **argv)
 
 	for (int i = 2; i < argc; ++i)
 		loadpath(argv[i]);
+	if (!amount)
+		errx(1, "no files to search from");
 	lines = atoi(argv[1]);
 	lines = lines < 0 ? 0 : lines;
 	lines = lines > amount - 1 ? amount - 1 : lines;
