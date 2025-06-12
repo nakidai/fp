@@ -89,10 +89,10 @@ int colcmp(const void *_left, const void *_right)
 	const struct result *left = _left, *right = _right;
 	if (left->c.length != right->c.length)
 		return left->c.length < right->c.length ? 1 : -1;
+	if (left->c.offset != right->c.offset)
+		return left->c.offset < right->c.offset ? -1 : 1;
 	if (left->c.fullness != right->c.fullness)
 		return left->c.fullness < right->c.fullness ? -1 : 1;
-	if (left->c.offset != right->c.offset)
-		return left->c.offset < right->c.offset ? 1 : -1;
 	return -strcmp(left->name, right->name);
 }
 
