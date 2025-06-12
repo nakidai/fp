@@ -96,6 +96,14 @@ int colcmp(const void *_left, const void *_right)
 	return -strcmp(left->name, right->name);
 }
 
+int find(const char *name)
+{
+	for (size_t i = 0; i < amount; ++i)
+		if (!strcmp(results[i].name, name))
+			return 1;
+	return 0;
+}
+
 void loadpath(const char *path)
 {
 	errno = 0;
@@ -104,6 +112,9 @@ void loadpath(const char *path)
 		err(1, "opendir(`%s')", path);
 	for (struct dirent *d; (d = readdir(dir));)
 	{
+		if (find(d->d_name))
+			continue;
+
 		results = realloc(results, sizeof(*results) * ++amount);
 		if (!results)
 			err(1, "realloc()");
@@ -132,14 +143,15 @@ void render(const char *buf, size_t bufi)
 
 int main(int argc, char **argv)
 {
-	if (argc != 3 || !*argv[1] || !*argv[2])
+	if (argc < 3 || !*argv[1])
 	{
-		fprintf(stderr, "usage: %s path lines\n", *argv);
+		fprintf(stderr, "usage: %s lines path [path [...]]\n", *argv);
 		return 1;
 	}
 
-	loadpath(argv[1]);
-	lines = atoi(argv[2]);
+	for (int i = 2; i < argc; ++i)
+		loadpath(argv[i]);
+	lines = atoi(argv[1]);
 	lines = lines < 0 ? 0 : lines;
 	lines = lines > amount - 1 ? amount - 1 : lines;
 	render("", 0);
