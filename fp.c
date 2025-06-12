@@ -153,6 +153,9 @@ int main(int argc, char **argv)
 		{
 		case -1: case 4: case '\n': case '\r':
 			return 0;
+		case 27:
+			ischosen = 0;
+			return 0;
 		case 127:
 		{
 			if (!bufi)
