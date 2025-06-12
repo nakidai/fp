@@ -150,8 +150,7 @@ int main(int argc, char **argv)
 	char buf[NAME_MAX+1] = {0};
 	size_t bufi = 0;
 
-	for (int ch; (ch = getch());)
-	{
+	for (int ch; (ch = getch()); render(buf, bufi))
 		switch (ch)
 		{
 		case -1: case 4: case '\n': case '\r':
@@ -172,6 +171,4 @@ int main(int argc, char **argv)
 			buf[bufi++] = ch;
 		} break;
 		}
-		render(buf, bufi);
-	}
 }
