@@ -21,7 +21,7 @@ struct result
 	char name[NAME_MAX+1];
 } *results = 0;
 size_t amount = 0;
-int ischosen = 1;
+int ischosen = 1, lines;
 struct termios state;
 
 int getch()
@@ -31,20 +31,20 @@ int getch()
 
 	fflush(stdout);
 
-	int res = tcgetattr(0, &old);
+	tcgetattr(0, &old);
 	old.c_lflag &= ~ICANON & ~ECHO;
 	old.c_cc[VMIN] = 1;
 	old.c_cc[VTIME] = 0;
-	res = tcsetattr(0, TCSANOW, &old);
+	tcsetattr(0, TCSANOW, &old);
 	buf = getchar();
 	old.c_lflag |= ICANON | ECHO;
-	res = tcsetattr(0, TCSANOW, &old);
+	tcsetattr(0, TCSANOW, &old);
 	return buf;
 }
 
 void restore(void)
 {
-	fprintf(stderr, "\033[6B\r");
+	fprintf(stderr, "\033[%dB\r", lines + 1);
 	if (ischosen)
 	{
 		fprintf(stderr, "You've chosen `");
@@ -122,21 +122,24 @@ void render(const char *buf, size_t bufi)
 {
 	sortresults(buf);
 	fprintf(stderr, "\r: %s\n", buf);
-	for (size_t i = 0; i < 5; ++i)
+	for (size_t i = 0; i < lines; ++i)
 		fprintf(stderr, "`%s'\n", results[i].name);
-	fprintf(stderr, "\033[6A\033[%luC", 2 + bufi);
+	fprintf(stderr, "\033[%dA\033[%luC", lines + 1, 2 + bufi);
 	fflush(stderr);
 }
 
 int main(int argc, char **argv)
 {
-	if (argc != 2 || !*argv[1])
+	if (argc != 3 || !*argv[1] || !*argv[2])
 	{
-		fprintf(stderr, "usage: %s path\n", *argv);
+		fprintf(stderr, "usage: %s path lines\n", *argv);
 		return 1;
 	}
 
 	loadpath(argv[1]);
+	lines = atoi(argv[2]);
+	lines = lines < 0 ? 0 : lines;
+	lines = lines > amount - 1 ? amount - 1 : lines;
 	render("", 0);
 
 	tcgetattr(0, &state);
