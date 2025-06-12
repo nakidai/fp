@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# this script uses fp to search for file in /bin, then executes it with nohup
+# and redirecting output to /dev/null (meaning terminal can be closed after
+# running a program). Can be used as a lightweight and more crossplatform (can
+# be ran on both X and Wayland) replacement for dmenu[1]
+#
+# [1] https://tools.suckless.org/dmenu/
+
+PROG="`fp /bin 10`"
+nohup "$PROG" > /dev/null 2>&1 &
