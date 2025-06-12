@@ -136,17 +136,17 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	loadpath(argv[1]);
+	render("", 0);
+
 	tcgetattr(0, &state);
 	for (int sig = 1; sig <= SIGRTMAX; ++sig)
 		signal(sig, getchhnd);
 	atexit(restore);
 
-	loadpath(argv[1]);
-
 	char buf[NAME_MAX+1] = {0};
 	size_t bufi = 0;
 
-	render("", 0);
 	for (int ch; (ch = getch());)
 	{
 		switch (ch)
