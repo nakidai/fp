@@ -7,5 +7,6 @@
 #
 # [1] https://tools.suckless.org/dmenu/
 
-PROG="`fp /bin 10`"
-nohup "$PROG" > /dev/null 2>&1 &
+paths=`printf '%s' "$PATH" | tr ':' ' '` 
+prog="`fp 10 $paths`"
+nohup "$prog" > /dev/null 2>&1 &
