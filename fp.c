@@ -64,7 +64,7 @@ void getchhnd(int sig)
 
 struct collision strsub(const char *outside, const char *inside)
 {
-	struct collision res = {0, 0};
+	struct collision res = {0, 0, 0};
 
 	size_t outlen = strlen(outside);
 	size_t inlen = strlen(inside);
