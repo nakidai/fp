@@ -150,6 +150,7 @@ int main(int argc, char **argv)
 	char buf[NAME_MAX+1] = {0};
 	size_t bufi = 0;
 
+	/* TODO: maybe add support for multibyte characters */
 	for (int ch; (ch = getch()); render(buf, bufi))
 		switch (ch)
 		{
