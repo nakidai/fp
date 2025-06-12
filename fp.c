@@ -100,6 +100,8 @@ void loadpath(const char *path)
 {
 	errno = 0;
 	DIR *dir = opendir(path);
+	if (!dir)
+		err(1, "opendir(`%s')", path);
 	for (struct dirent *d; (d = readdir(dir));)
 	{
 		results = realloc(results, sizeof(*results) * ++amount);
