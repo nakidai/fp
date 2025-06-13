@@ -9,4 +9,6 @@
 
 paths=`printf '%s' "$PATH" | tr ':' ' '` 
 prog="`fp 10 $paths`"
-nohup "$prog" > /dev/null 2>&1 &
+[ -z "$prog" ] && exit
+nohup sh -c "'$prog' &" > /dev/null 2>&1 &
+while jobs | grep Running > /dev/null; do true; done
